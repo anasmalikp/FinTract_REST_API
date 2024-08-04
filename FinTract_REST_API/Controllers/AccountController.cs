@@ -1,5 +1,6 @@
 ﻿using FinTract_REST_API.Interfaces;
 using FinTract_REST_API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace FinTract_REST_API.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddAccount(Accounts account)
         {
             var response = await services.CreateAccount(account);
@@ -24,6 +26,18 @@ namespace FinTract_REST_API.Controllers
                 return Ok(response);
             }
             return BadRequest(response);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetAllAccounts()
+        {
+            var response = await services.GetAllAccount();
+            if(response == null)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
         }
     }
 }

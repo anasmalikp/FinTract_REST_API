@@ -1,4 +1,5 @@
 ﻿using FinTract_REST_API.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,9 +16,10 @@ namespace FinTract_REST_API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> TransactionProcess(int userid, int amount, int accountid)
+        [Authorize]
+        public async Task<IActionResult> TransactionProcess(int amount, int accountid)
         {
-            var response = await services.ProcessTransaction(userid, amount, accountid);
+            var response = await services.ProcessTransaction(amount, accountid);
             if (response)
             {
                 return Ok(response);
@@ -26,9 +28,10 @@ namespace FinTract_REST_API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetHistory(string userid)
+        [Authorize]
+        public async Task<IActionResult> GetHistory()
         {
-            var result = await services.GetHistory(userid);
+            var result = await services.GetHistory();
             if(result == null)
             {
                 return BadRequest("no data");

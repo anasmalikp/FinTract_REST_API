@@ -4,10 +4,14 @@ using FinTract_REST_API.Interfaces;
 using FinTract_REST_API.Models;
 using IdentityModel.Client;
 using Microsoft.Data.SqlClient;
+using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.Drawing;
+using System.IdentityModel.Tokens.Jwt;
 using System.Reflection.Metadata;
+using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace FinTract_REST_API.Services
 {
@@ -48,6 +52,52 @@ namespace FinTract_REST_API.Services
                 logger.LogError(ex.Message);
                 return false;
             }
+        }
+
+        public async Task<string> LoginUser(Users user)
+        {
+            try
+            {
+                var parameter = new DynamicParameters();
+                parameter.Add("@email", user.email);
+
+                var userfromdb = await connection.QueryAsync<Users>("Get_Users", parameter, commandType: CommandType.StoredProcedure);
+                if(userfromdb == null)
+                {
+                    logger.LogError("User not registered");
+                    return null;
+                }
+                var isVerified = PasswordHasher.VerifyPassword(userfromdb.FirstOrDefault().password, user.password);
+                if (isVerified)
+                {
+                    return GetToken(userfromdb.FirstOrDefault());
+                }
+                logger.LogError("wrong password");
+                return null;
+            }
+            catch(Exception ex)
+            {
+                logger.LogError(ex.Message);
+                return null;
+            }
+        }
+
+        private string GetToken(Users user)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["jwt:key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.id.ToString())
+            };
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                signingCredentials: credentials,
+                expires: DateTime.Now.AddDays(1)
+                );
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

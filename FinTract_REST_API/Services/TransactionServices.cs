@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using FinTract_REST_API.Encryption;
 using FinTract_REST_API.Interfaces;
 using FinTract_REST_API.Models;
 using Microsoft.Data.SqlClient;
@@ -11,17 +12,20 @@ namespace FinTract_REST_API.Services
         private readonly IDbConnection connection;
         private readonly IConfiguration config;
         private readonly ILogger<TransactionServices> logger;
-        public TransactionServices(IConfiguration config, ILogger<TransactionServices> logger)
+        private readonly UserCreds creds;
+        public TransactionServices(IConfiguration config, ILogger<TransactionServices> logger, UserCreds creds)
         {
             this.config = config;
             this.connection = new SqlConnection(config.GetConnectionString("DefaultConnection"));
             this.logger = logger;
+            this.creds = creds;
         }
 
-        public async Task<bool> ProcessTransaction (int userid, int amount, int accountid)
+        public async Task<bool> ProcessTransaction (int amount, int accountid)
         {
             try
             {
+                var userid = creds.userid;
                 var parameter = new DynamicParameters();
                 parameter.Add("@Userid", userid);
                 parameter.Add("@Amt", amount);
@@ -42,10 +46,11 @@ namespace FinTract_REST_API.Services
             }
         }
 
-        public async Task<IEnumerable<History>> GetHistory(string userid)
+        public async Task<IEnumerable<History>> GetHistory()
         {
             try
             {
+                var userid = creds.userid;
                 var parameter = new DynamicParameters();
                 parameter.Add("@Userid", userid);
 

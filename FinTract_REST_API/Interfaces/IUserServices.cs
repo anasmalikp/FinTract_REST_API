@@ -5,5 +5,6 @@ namespace FinTract_REST_API.Interfaces
     public interface IUserServices
     {
         Task<bool> RegisterUser(Users user);
+        Task<string> LoginUser(Users user);
     }
 }
