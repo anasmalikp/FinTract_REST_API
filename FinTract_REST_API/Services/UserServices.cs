@@ -27,7 +27,7 @@ namespace FinTract_REST_API.Services
             this.logger = logger;
         }
 
-        public async Task<bool> RegisterUser(Users user)
+        public async Task<int?> RegisterUser(Users user)
         {
             try
             {
@@ -44,13 +44,17 @@ namespace FinTract_REST_API.Services
                 int? newUserid = parameters.Get<int?>("@Newuserid");
                 string? Errormsg = parameters.Get<string?>("@Errormsg");
 
-                logger.LogInformation(Errormsg);
-                return true;
+                if(newUserid == null)
+                {
+                    logger.LogError(Errormsg);
+                    return -1;
+                }
+                return newUserid;
             }
             catch(Exception ex)
             {
                 logger.LogError(ex.Message);
-                return false;
+                return -1;
             }
         }
 

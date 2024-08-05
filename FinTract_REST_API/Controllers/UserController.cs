@@ -19,7 +19,7 @@ namespace FinTract_REST_API.Controllers
         public async Task<IActionResult> RegisterUser(Users user)
         {
             var result = await services.RegisterUser(user);
-            if(result)
+            if(result!= -1)
             {
                 return Ok(result);
             }
