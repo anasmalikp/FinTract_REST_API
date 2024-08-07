@@ -93,6 +93,8 @@ namespace FinTract_REST_API.Services
 
             var claims = new[]
             {
+                new Claim(JwtRegisteredClaimNames.Iss, config["jwt:issuer"]),
+                new Claim(JwtRegisteredClaimNames.Aud, config["jwt:audience"]),
                 new Claim(ClaimTypes.NameIdentifier, user.id.ToString())
             };
 
