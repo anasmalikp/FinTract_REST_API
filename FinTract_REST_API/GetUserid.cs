@@ -21,12 +21,12 @@ namespace FinTract_REST_API
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            if (context.Request.Path.StartsWithSegments("/api/User") && context.Request.Method.ToUpperInvariant() == "POST")
+            if (context.Request.Path.StartsWithSegments("/api/User/login") && context.Request.Method.ToUpperInvariant() == "POST")
             {
                 await next(context);
                 return;
             }
-
+            logger.LogInformation(context.Request.Path);
             string bearerToken = context.Request.Headers["Authorization"];
             string token = bearerToken?.Split(" ")[1];
             creds.userid = PasswordHasher.DecodeToken(token);

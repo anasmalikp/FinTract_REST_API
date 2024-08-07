@@ -61,8 +61,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<GetUserid>();
 app.UseCors("ReactPolicy");
+app.UseMiddleware<GetUserid>();
 app.MapControllers();
 
 app.Run();
