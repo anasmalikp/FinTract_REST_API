@@ -64,5 +64,23 @@ namespace FinTract_REST_API.Services
                 return null;
             }
         }
+
+        public async Task<int> GetWallet()
+        {
+            try
+            {
+                var userid = creds.userid;
+                var parameter = new DynamicParameters();
+                parameter.Add("@Userid", userid);
+
+                var result = await connection.QueryFirstAsync<int>("GetWallet", parameter, commandType: CommandType.StoredProcedure);
+                return result;
+            }
+            catch( Exception ex)
+            {
+                logger.LogError(ex.Message);
+                return 0;
+            }
+        }
     }
 }

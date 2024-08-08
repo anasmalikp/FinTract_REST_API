@@ -42,13 +42,14 @@ namespace FinTract_REST_API.Services
             }
         }
 
-        public async Task<IEnumerable<Accounts>> GetAllAccount()
+        public async Task<IEnumerable<Accounts>> GetAllAccount(int catId)
         {
             try
             {
                 var userid = creds.userid;
                 var parameter = new DynamicParameters();
                 parameter.Add("@UserId", userid);
+                parameter.Add("@catid", catId);
 
                 var result = await connection.QueryAsync<Accounts>("Get_Accounts", parameter, commandType: CommandType.StoredProcedure);
                 return result;

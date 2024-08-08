@@ -38,5 +38,12 @@ namespace FinTract_REST_API.Controllers
             }
             return Ok(result);
         }
+
+        [HttpGet("getwallet")]
+        public async Task<IActionResult> Get_Wallet()
+        {
+            var result = await services.GetWallet();
+            return Ok(result);
+        }
     }
 }

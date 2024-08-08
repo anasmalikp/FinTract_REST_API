@@ -6,5 +6,6 @@ namespace FinTract_REST_API.Interfaces
     {
         Task<bool> ProcessTransaction(int amount, int accountid);
         Task<IEnumerable<History>> GetHistory();
+        Task<int> GetWallet();
     }
 }

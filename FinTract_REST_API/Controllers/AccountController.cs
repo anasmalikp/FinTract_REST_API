@@ -30,9 +30,9 @@ namespace FinTract_REST_API.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetAllAccounts()
+        public async Task<IActionResult> GetAllAccounts(int catId)
         {
-            var response = await services.GetAllAccount();
+            var response = await services.GetAllAccount(catId);
             if(response == null)
             {
                 return BadRequest(response);

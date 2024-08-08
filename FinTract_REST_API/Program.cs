@@ -58,10 +58,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("ReactPolicy");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("ReactPolicy");
 app.UseMiddleware<GetUserid>();
 app.MapControllers();
 
