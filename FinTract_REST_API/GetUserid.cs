@@ -21,7 +21,8 @@ namespace FinTract_REST_API
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            if (context.Request.Path.StartsWithSegments("/api/User/login") && context.Request.Method.ToUpperInvariant() == "POST")
+            if (context.Request.Path.StartsWithSegments("/api/User/login") && context.Request.Method.ToUpperInvariant() == "POST"
+                || context.Request.Path.StartsWithSegments("/api/User") && context.Request.Method.ToUpperInvariant() == "POST")
             {
                 await next(context);
                 return;

@@ -66,7 +66,7 @@ namespace FinTract_REST_API.Services
                 parameter.Add("@email", user.email);
 
                 var userfromdb = await connection.QueryAsync<Users>("Get_Users", parameter, commandType: CommandType.StoredProcedure);
-                if(userfromdb == null)
+                if(userfromdb.Count() == 0)
                 {
                     logger.LogError("User not registered");
                     return null;
